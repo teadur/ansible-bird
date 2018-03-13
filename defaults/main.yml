@@ -14,6 +14,7 @@
 # limitations under the License.
 
 bird_package_state: latest
+bird_package_source: bird
 
 bird_conf_dir: /etc/bird
 

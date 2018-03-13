@@ -13,8 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#can be bird or epel
-bird_package_source: bird
 
 #bird configurations are stored in /etc on RHEL instead of /etc/bird
 bird_conf_dir: /etc
