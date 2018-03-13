@@ -52,6 +52,7 @@
   delay: 2
   tags:
     - bird-repos
+  when: ansible_lsb.codename != "stretch"
 
 #TODO(evrardjp): Replace the next 2 tasks by a standard apt with cache
 #when https://github.com/ansible/ansible-modules-core/pull/1517 is merged
