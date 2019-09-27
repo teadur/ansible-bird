@@ -16,7 +16,7 @@
 # Detect whether the init system is upstart of systemd.
 - name: Check init system
   command: cat /proc/1/comm
-  always_run: yes
+#  always_run: yes
   changed_when: false
   register: _pid1_name
   tags:
@@ -24,7 +24,7 @@
 
 - name: Set the name of pid1
   set_fact:
-    pid1_name: "{{ _pid1_name.stdout }}"
+    pid1_name: "{{ _pid1_name.stdout |default('systemd') }}"
   tags:
     - always
 

@@ -47,12 +47,12 @@
     repo: "{{ bird_repo.repo }}"
     state: "{{ bird_repo.state }}"
   register: add_repos
-  until: add_repos|success
+#  until: add_repos|success
   retries: 5
   delay: 2
+  when: bird_package_source == "bird"
   tags:
     - bird-repos
-  when: ansible_lsb.codename != "stretch"
 
 #TODO(evrardjp): Replace the next 2 tasks by a standard apt with cache
 #when https://github.com/ansible/ansible-modules-core/pull/1517 is merged
