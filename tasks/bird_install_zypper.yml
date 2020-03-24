@@ -27,14 +27,12 @@
     - bird-keys
 
 - name: Add BIRD repo
-  yum_repository:
+  zypper_repository:
     name: "{{ item.name }}"
     description: "{{ item.description }}"
-    baseurl: "{{ item.baseurl }}"
+    autorefresh: true
+    repo: "{{ item.baseurl }}"
     enabled: "{{ item.enabled | default(omit) }}"
-    gpgcheck: "{{ item.gpgcheck | default(True) }}"
-    gpgkey: "{{ item.gpgkey }}"
-    repo_gpgcheck: "{{ item.repo_gpgcheck | default(omit) }}"
     priority: "{{ item.priority | default(omit) }}"
     state: "{{ item.state | default(omit) }}"
   register: add_repos
@@ -48,16 +46,13 @@
   tags:
     - bird-repos
 
-- name: Install BIRD yum pre packages
-  yum:
-    pkg: "{{ item }}"
-    state: "{{ bird_package_state }}"
-  register: install_packages
-  until: install_packages is success
-  retries: 5
-  delay: 2
-  loop: "{{ bird_required_packages }}"
+- name: Disable repo metadata GPG check for BIRD
+  command: "zypper mr --gpgcheck-allow-unsigned-repo --refresh {{ item.name }}"
+  changed_when: false
+  loop:
+    - "{{ bird_repo }}"
   when:
-    - bird_package_source == 'epel'
+    - bird_package_source == 'bird'
+    - not item.repo_gpg_check | default('yes') | bool
   tags:
-    - bird-yum-packages
+    - bird-repos
