@@ -17,7 +17,7 @@
   set_fact:
     bird_ipv4_enabled: "{{ ansible_default_ipv4 is defined | bool }}"
   when:
-    - "{{ bird_ipv4_enabled == 'detect' }}"
+    - "bird_ipv4_enabled == 'detect'"
   tags:
     - bird-config
     - bird-init
@@ -29,7 +29,7 @@
          and ansible_default_ipv6['scope'] is defined
          and ansible_default_ipv6['scope'] == 'global') | bool }}
   when:
-    - "{{ bird_ipv6_enabled == 'detect' }}"
+    - "bird_ipv6_enabled == 'detect'"
   tags:
     - bird-config
     - bird-init
@@ -42,8 +42,10 @@
     group: "root"
     mode: "0644"
   register: bird_results
-  when: "{{ item.enabled | bool }}"
-  with_items: "{{ bird_configs }}"
+  when: "item.enabled | bool"
+  loop: "{{ bird_configs }}"
+  loop_control:
+    label: "{{ item.config_file }}"
   tags:
     - bird-config
 
@@ -51,22 +53,26 @@
   service:
     name: "{{ item.item.service }}"
     state: restarted
-  when: "{{ item | changed }}"
+  when: "item is changed"
   ignore_errors: "{{ ansible_check_mode | default(false) }}"
-  with_items: "{{ bird_results.results }}"
+  loop: "{{ bird_results.results }}"
+  loop_control:
+    label: "{{ item.item.service }}"
   tags:
     - upstart-init
     - bird-init
 
 - name: Disable inactive BIRD BGP services and remove from bootup start
   service:
-   name: "{{ item.service }}"
-   enabled: no
-   state: stopped
+    name: "{{ item.service }}"
+    enabled: false
+    state: stopped
   when:
-    - "{{ not item.enabled | bool }}"
-    - "{{ item.enabled != 'skip' }}"
-  with_items: "{{ bird_configs }}"
+    - "not item.enabled | bool"
+    - "item.enabled != 'skip'"
+  loop: "{{ bird_configs }}"
+  loop_control:
+    label: "{{ item.service }}"
   ignore_errors: "{{ ansible_check_mode | default(false) }}"
   tags:
     - upstart-init
@@ -74,13 +80,15 @@
 
 - name: Start active BIRD BGP services and add to bootup start
   service:
-   name: "{{ item.service }}"
-   enabled: yes
-   state: started
+    name: "{{ item.service }}"
+    enabled: true
+    state: started
   when:
-    - "{{ item.enabled | bool }}"
-    - "{{ item.enabled != 'skip' }}"
-  with_items: "{{ bird_configs }}"
+    - "item.enabled | bool"
+    - "item.enabled != 'skip'"
+  loop: "{{ bird_configs }}"
+  loop_control:
+    label: "{{ item.service }}"
   ignore_errors: "{{ ansible_check_mode | default(false) }}"
   tags:
     - upstart-init

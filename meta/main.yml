@@ -17,11 +17,19 @@ galaxy_info:
   author: logan
   description: Installation of BIRD BGP daemon
   license: Apache2
-  min_ansible_version: 1.6.6
+  min_ansible_version: 2.5
   platforms:
     - name: Ubuntu
       versions:
         - trusty
+        - xenial
+        - bionic
+    - name: EL
+      versions:
+        - 7
+    - name: opensuse
+      versions:
+        - 42.3
   categories:
     - networking
     - bgp

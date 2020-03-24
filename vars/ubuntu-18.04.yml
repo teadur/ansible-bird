@@ -1,5 +1,5 @@
 ---
-# Copyright 2016, Logan Vig <logan2211@gmail.com>
+# Copyright 2018, Logan Vig <logan2211@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,21 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Playbook for role testing
-  hosts: localhost
-  connection: local
-  roles:
-    - role: "{{ rolename | basename }}"
-  vars:
-    etcd_cluster_group: all
-  post_tasks:
-    - name: Check bird is running
-      command: pgrep -a bird
-      register: bird_proc
-    - name: Verify BIRD daemon operation
-      shell: birdc show status
-      register: bird_health
-    - name: Check role functions
-      assert:
-        that:
-          - "'Daemon is up and running' in bird_health.stdout"
+## APT Cache Options
+cache_timeout: 600
+
+bird_required_packages: []
+bird_packages:
+  - bird
