@@ -15,7 +15,7 @@
 
 - include_tasks: bird_install_apt.yml
   when:
-    - ansible_pkg_mgr == 'apt'
+    - ansible_pkg_mgr == 'apt' and bird_package_source == 'bird'
   tags:
     - install-apt
 
@@ -36,7 +36,7 @@
     name: "{{ bird_packages }}"
     state: "{{ bird_package_state }}"
     update_cache: "{{ (ansible_pkg_mgr in ['apt', 'zypper']) | ternary('yes', omit) }}"
-    cache_valid_time: "{{ (ansible_pkg_mgr == 'apt' and not add_repos is changed) | ternary(cache_timeout, omit) }}"
+    #cache_valid_time: "{{ (ansible_pkg_mgr == 'apt' and not add_repos is changed) | ternary(cache_timeout, omit) }}"
   register: install_packages
   until: install_packages is success
   retries: 5

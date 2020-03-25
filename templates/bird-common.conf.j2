@@ -1,9 +1,18 @@
 # {{ ansible_managed }}
 
 router id {{ bird_router_id }};
+{% for global in item.globals %}
+    {{ global }};
+{% endfor -%}
 
 {% for include in item.includes %}
 include "{{ include }}";
+{% endfor -%}
+
+{% for name, template in item.templates.items() %}
+template {{ name }} {
+  {{ template | indent(2) -}}
+}
 {% endfor -%}
 
 {% for name, filter in item.filters.items() %}

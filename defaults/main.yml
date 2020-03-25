@@ -35,6 +35,8 @@ bird_configs:
     enabled: "{{ bird_ipv4_enabled }}"
     service: bird
     includes: "{{ bird_ipv4_includes }}"
+    globals: "{{ bird_ipv4_globals  }}"
+    templates: "{{ bird_ipv4_templates }}"
     filters: "{{ bird_ipv4_filters }}"
     protocols: "{{ bird_ipv4_protocols }}"
   - config_file: "{{ bird_conf_dir }}/bird6.conf"
@@ -45,6 +47,7 @@ bird_configs:
     protocols: "{{ bird_ipv6_protocols }}"
 
 bird_ipv4_includes: []
+bird_ipv4_globals:  []
 bird_ipv4_filters: {}
 bird_ipv4_protocols: "{{ bird_default_protocols }}"
 
