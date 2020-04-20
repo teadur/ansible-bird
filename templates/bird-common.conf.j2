@@ -9,15 +9,16 @@ router id {{ bird_router_id }};
 include "{{ include }}";
 {% endfor -%}
 
-{% for name, template in item.templates.items() %}
-template {{ name }} {
-  {{ template | indent(2) -}}
-}
-{% endfor -%}
-
 {% for name, filter in item.filters.items() %}
 filter {{ name }} {
   {{ filter | indent(2) -}}
+}
+{% endfor -%}
+
+
+{% for name, template in item.templates.items() %}
+template {{ name }} {
+  {{ template | indent(2) -}}
 }
 {% endfor -%}
 
