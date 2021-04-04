@@ -1,6 +1,5 @@
 ---
-# Copyright 2016, Logan Vig <logan2211@gmail.com>
-# Copyright 2017, SUSE LINUX GmbH
+# Copyright 2020, Logan Vig <logan2211@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,27 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-bird_package_source: bird
+# CentOS 8 EPEL has bird2
+bird_major_version: 2
 
-# NOTE(hwoarang): openSUSE does not have a bird package easily available so we
-# use the same repository with RedHat.
+# can be bird or epel
+bird_package_source: epel
 
 # bird configurations are stored in /etc on RHEL instead of /etc/bird
 bird_conf_dir: /etc
 
-bird_keys: https://copr-be.cloud.fedoraproject.org/results/logan2211/bird/pubkey.gpg
-
-bird_yum_repo_url: https://copr-be.cloud.fedoraproject.org/results/logan2211/bird/epel-7-x86_64/
-bird_repo:
-  state: present
-  name: bird
-  description: COPR repository for BIRD packages on CentOS 7
-  baseurl: "{{ bird_yum_repo_url }}"
-  gpgkey: "{{ bird_keys }}"
-  repo_gpg_check: false
-
-
-bird_required_packages: []
+bird_required_packages:
+  - "{{ 'epel-release' if bird_package_source == 'epel' }}"
 
 bird_packages:
   - bird
