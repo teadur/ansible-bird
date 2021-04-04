@@ -1,4 +1,5 @@
 ---
+distro: bionic
 language: python
 cache:
   timeout: 3600
@@ -17,21 +18,21 @@ _ubuntu_bionic_build: &ubuntu_bionic_build
   docker_image_tag: ubuntu-bionic
   CACHE_NAME: bionic
 
-_centos_build: &centos_build
+_ubuntu_focal_build: &ubuntu_focal_build
+  docker_image_tag: ubuntu-focal
+  CACHE_NAME: focal
+
+_centos7_build: &centos7_build
   docker_image_tag: centos-7
   CACHE_NAME: cent7
 
-_opensuse_build: &opensuse_build
-  docker_image_tag: opensuse-42.3
-  docker_command: /usr/lib/systemd/systemd
-  CACHE_NAME: suse43
+_centos8_build: &centos8_build
+  docker_image_tag: centos-8
+  CACHE_NAME: cent8
 
 # Ansible versions
-_ansible_25_build: &ansible_25_build
-  ansible_version: "'ansible>=2.5,<2.6'"
-
-_ansible_26_build: &ansible_26_build
-  ansible_version: "'ansible>=2.6,<2.7'"
+_ansible_28_build: &ansible_28_build
+  ansible_version: "'ansible>=2.8,<2.9'"
 
 env:
   global:
@@ -44,41 +45,33 @@ env:
 matrix:
   fast_finish: true
   include:
-    # ANSIBLE 2.5
+    # ANSIBLE 2.8
     - env:
         <<: *ubuntu_xenial_build
-        <<: *ansible_25_build
+        <<: *ansible_28_build
     - env:
         <<: *ubuntu_bionic_build
-        <<: *ansible_25_build
+        <<: *ansible_28_build
     - env:
-        <<: *centos_build
-        <<: *ansible_25_build
+        <<: *ubuntu_focal_build
+        <<: *ansible_28_build
     - env:
-        <<: *opensuse_build
-        <<: *ansible_25_build
-    # ANSIBLE 2.6
+        <<: *centos7_build
+        <<: *ansible_28_build
     - env:
-        <<: *ubuntu_xenial_build
-        <<: *ansible_26_build
-    - env:
-        <<: *ubuntu_bionic_build
-        <<: *ansible_26_build
-    - env:
-        <<: *centos_build
-        <<: *ansible_26_build
-    - env:
-        <<: *opensuse_build
-        <<: *ansible_26_build
+        <<: *centos8_build
+        <<: *ansible_28_build
     # ANSIBLE STABLE
     - env:
         <<: *ubuntu_xenial_build
     - env:
         <<: *ubuntu_bionic_build
     - env:
-        <<: *centos_build
+        <<: *ubuntu_focal_build
     - env:
-        <<: *opensuse_build
+        <<: *centos7_build
+    - env:
+        <<: *centos8_build
 
 before_install:
   # Load cached docker images

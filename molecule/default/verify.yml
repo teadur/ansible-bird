@@ -1,9 +1,9 @@
 ---
-- name: Converge
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
   hosts: all
-  roles:
-    - role: "{{ playbook_dir | dirname | dirname | basename }}"
-  post_tasks:
+  tasks:
     - name: Check bird is running
       command: pgrep -a bird
       register: bird_proc
