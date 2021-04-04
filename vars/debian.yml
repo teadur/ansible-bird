@@ -21,7 +21,7 @@ bird_keys:
     url: http://bird.network.cz/debian/apt.key
     hash_id: '4A7A714D'
 
-bird_apt_repo_url: http://bird.network.cz/debian/
+bird_apt_repo_url: http://ftp.funet.fi/debian/
 bird_repo:
   repo: "deb {{ bird_apt_repo_url }} {{ ansible_distribution_release }} main"
   state: "present"
